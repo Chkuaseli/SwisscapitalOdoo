@@ -189,9 +189,10 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div class = "oe_kanban_global_click o_kanban_record_has_image_fill o_kanban_record">
-                                <t t-if="record.profile.raw_value">
-                                <img t-att-src="kanban_image('employee.profile', 'image_128', record.id.value)" width="54px" height="54px" alt="profile image"/>
-                                </t>
+                            <t t-if="record.profile.raw_value">
+                                <field name="profile" widget="image" class="oe_avatar " width="54px" height="54px" alt="profile image" />
+                                <!-- <img t-att-src="kanban_image('employee.profile', 'image_128', record.id.value)" width="54px" height="54px" alt="profile image"/> -->
+                            </t>
                             <t t-else = "">
                                 <img class="o_kanban_image" alt="avatar" t-att-src='_s+"/base/static/img/avatar.png"' />
                             </t>
@@ -199,10 +200,10 @@
                                 <strong class="o_kanban_record_title"><field name="first_name"/> </strong>  
                             <div class="o_kanban_tags_section"/>
                                 <ul>
-                                 <li> ID:<field name="id"/> </li>
+                                <li> ID:<field name="id"/> </li>
                                 <li> PERSONAL NO:<field name="personal_no"/> </li>
                                 <li> VALID :<field name="date_of_issue"/> TO <field name="date_of_expiry"/> </li>
-                                </ul>
+                                </ul> 
                             </div>
                        </div>
                     </t>
