@@ -1,12 +1,15 @@
 from odoo import http
-from odoo.http import requests
+from odoo.http import request
+
 
 class Company(http.Controller):
 
-    @http.route('/employee/', type='http', auth="user", website=True)
+    @http.route('/employee/', type='http', auth="none", website=True)
     def company_employee(self, **kw):
-        print("can loadinggggggggggggggggggggggg")
-        employee = requests.evn['company.employee'].search(['gender','=','M'])
-        if employee:
-            return employee
-        return "hello controler"
+        employee = request.env['company.employee'].search([])
+        emp=[]
+        for empl in employee:
+            print('employee: ',employee)
+            emp.append(empl)
+            return emp[0].first_name
+        return "hello controler you have a same exception"
