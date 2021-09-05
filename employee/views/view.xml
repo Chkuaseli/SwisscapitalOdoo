@@ -149,11 +149,11 @@
               <field name="birth_of_date"  options="{'datepicker': {'minDate': '01/01/1900'}}"/>
               <field name="date_of_expiry" />
                 <field name="card_no" />
-              <field name="signature" widget="image" class="oe_avatar main_img" />
+              <field name="signature" widget="image" class="oe_avatar " />
               <field name="place_of_birth" />
               <field name="date_of_issue" />
               <field name="issuing_autority" />
-              <field name="profile" widget="image" class="oe_avatar main_img" />
+              <field name="profile" widget="image" class="oe_avatar " />
               <field name="department_id" />
               <field name="feature_list" widget="many2many_tags" />
             </group>
@@ -171,7 +171,7 @@
       <field name="arch" type="xml">
         <kanban>
             <field name="id"/>
-            <field name="first_name"/>
+            <field name="first_name"  class="text_color"/>
             <field name="last_name" />
             <field name="cit" />
             <field name="gender" />
@@ -180,7 +180,7 @@
             <field name="date_of_expiry" />
             <field name="date_of_issue" />
             <field name="card_no" />
-            <field name="signature" widget="image" class="oe_avatar " />
+            <field name="signature" widget="image" class="oe_avatar " style="width:70px;height:auto;"/>
             <field name="place_of_birth" />
             <field name="issuing_autority" />
             <field name="profile" widget="image" class="oe_avatar "  />
@@ -198,11 +198,11 @@
                             </t>
                             <div class="oe_kanban_details">
                                 <strong class="o_kanban_record_title"><field name="first_name"/> </strong>  
-                            <div class="o_kanban_tags_section"/>
+                            <div class="o_kanban_tags_section " />
                                 <ul>
-                                <li> ID:<field name="id"/> </li>
-                                <li> PERSONAL NO:<field name="personal_no"/> </li>
-                                <li> VALID :<field name="date_of_issue"/> TO <field name="date_of_expiry"/> </li>
+                                <li class = "title_colors"> ID:<field name="id"/> </li>
+                                <li class = "title_colors" > PERSONAL NO:<field name="personal_no"/> </li>
+                                <li class = "title_colors"> VALID :<field name="date_of_issue"/> TO <field name="date_of_expiry"/> </li>
                                 </ul> 
                             </div>
                        </div>

@@ -9,16 +9,16 @@ class Employee(models.Model):
     first_name = fields.Char(string="Name",required=True)
     last_name = fields.Char(string="Last Name",required=True)
     cit = fields.Char(string="Cit",required=True)
-    gender = fields.Selection([("M","Male"),("F","Female")], String="Gender",required=True)
+    gender = fields.Selection([("M","Male"),("F","Female")],help="Gender",required=True)
     personal_no = fields.Char(string="Personal No",required=True) # აქ integer არ გამოვიყენე რადგან მის რეინჯში არ ეტეოდა და bigint უნდა გამომეყენებინა რომლისთვისაც ახალი პაკეტი უნდა ჩამომეწერა ამიტომ თავი შევიკავე და ვალიდაციებში გამოვიყვან
     birth_of_date = fields.Date(string="Birth Date",required=True)
     date_of_expiry = fields.Date(string="Date Expiry",required=True)
     card_no = fields.Char(string="Card No",required=True)
-    signature = fields.Binary(string="Signature Image",max_width = 100,max_height = 100,verify_resolution = True,help = "Signature",required=True)
+    signature = fields.Binary(string="Signature Image",max_width = 100,max_height = 100,help = "Signature",required=True)
     place_of_birth = fields.Char(string="Place of birth",required=True)
     date_of_issue = fields.Date(string="Date of Issue",required=True)
     issuing_autority = fields.Char(string="Issuing Autority",required=True)
-    profile=fields.Binary(string="Profile Image" ,max_width = 100,max_height = 100,verify_resolution = True,help = "Profile image",required=True)
+    profile=fields.Binary(string="Profile Image" ,max_width = 100,max_height = 100,help = "Profile image",required=True)
     date_crated = fields.Date(string="Birth Created",required=True)
     department_id = fields.Many2one('company.department', string="Department", required=True)
     feature_list = fields.Many2many("company.feature", 'employee_fetaure_rel', 'employee_id', 'feture_id', string = "Human Features",required=True)
@@ -38,7 +38,18 @@ class Employee(models.Model):
                 if record.personal_no.isdigit() == False:
                     raise ValidationError('Personal No must be number! ')
                 if len(record.personal_no) != 11:
-                    raise ValidationError('Personal number must be 11 digit! ') 
+                    raise ValidationError('Personal number must be 11 digit! ')
+
+     # validate birth of date
+    @api.onchange('birth_of_date')
+    def validate_birth_of_date(self):
+        today = date.today()
+        for record in self:
+            if record.birth_of_date != False:
+                if record.birth_of_date > today:
+                    raise ValidationError("Imposible value for birt of date!")
+                if record.birth_of_date < date(1900, 1, 1):
+                    raise ValidationError("Imposible value !!! You are always alive ?")
     
     # validate exspiry date 
     @api.onchange('date_of_expiry','birth_of_date','date_of_issue')
@@ -85,7 +96,7 @@ class Employee(models.Model):
                 age = today.year - record.birth_of_date.year - ((today.month, today.day) <(record.birth_of_date.month, record.birth_of_date.day))
                 issue = today - record.date_of_issue
                 if record.date_of_issue > today or record.date_of_issue < max:
-                    raise ValidationError('This ID Card is expired your card DATE OF ISSUE must be less then today')
+                    raise ValidationError('This ID Card is expired your card DATE OF DATE must be less then today')
                 if age < 18 and issue >= timedelta((4*365)+1):
                     print("first record: ",record.date_of_issue)
                     raise ValidationError('This ID Card is expired or your entered data is incorrectly ')
