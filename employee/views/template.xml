@@ -5,8 +5,7 @@
     <template id="company_css_asset" name="company_css assets" inherit_id="web.assets_backend">
       <xpath expr="." position="inside">
         <link rel="stylesheet"  href="/custom/employee/static/src/css/employee.css"/>
-         <script type="text/javascript" src="/custom/employee/static/src/js/loader.js"></script>
-         </script>
+        <script type="text/javascript" src="/custom/employee/static/src/js/loader.js"></script>
       </xpath>
     </template>
   </data>
