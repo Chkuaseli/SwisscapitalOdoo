@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <data>
-    <!-- Load css File -->
-    <template id="company_css_asset" name="company_css assets" inherit_id="web.assets_backend">
-      <xpath expr="." position="inside">
-        <link rel="stylesheet"  href="/custom/employee/static/src/css/employee.css"/>
-        <script type="text/javascript" src="/custom/employee/static/src/js/loader.js"></script>
-      </xpath>
+    <template id="assets_backend_company" name="company_employee assets" inherit_id="web.assets_backend" >
+        <xpath expr="." position="inside">
+          <link rel="stylesheet" type="text/css" href="/custom/employee/static/src/css/employee.css"/>
+        </xpath>
     </template>
-  </data>
 </odoo>

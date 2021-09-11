@@ -1,6 +1,7 @@
 from odoo import fields,models,api
 from odoo.exceptions import ValidationError
 from datetime import date,datetime,timedelta
+from odoo.http import request
 
 class Employee(models.Model):
     _name = "company.employee"
@@ -8,6 +9,8 @@ class Employee(models.Model):
 
     first_name = fields.Char(string="Name",required=True)
     last_name = fields.Char(string="Last Name",required=True)
+    full_name = fields.Char(string="Full Name",compute='_fullname')
+    age = fields.Integer(string="age",compute="_calculate_age")
     cit = fields.Char(string="Cit",required=True)
     gender = fields.Selection([("M","Male"),("F","Female")],help="Gender",required=True)
     personal_no = fields.Char(string="Personal No",required=True) # აქ integer არ გამოვიყენე რადგან მის რეინჯში არ ეტეოდა და bigint უნდა გამომეყენებინა რომლისთვისაც ახალი პაკეტი უნდა ჩამომეწერა ამიტომ თავი შევიკავე და ვალიდაციებში გამოვიყვან
@@ -22,15 +25,41 @@ class Employee(models.Model):
     date_crated = fields.Date(string="Birth Created",required=True)
     department_id = fields.Many2one('company.department', string="Department", required=True)
     feature_list = fields.Many2many("company.feature", 'employee_fetaure_rel', 'employee_id', 'feture_id', string = "Human Features",required=True)
+    human_feature = fields.Char(string="Feature",compute = "_feature",store = True)
 
     # unique data "personal_no","card_no"
     _sql_constraints = [
         ('personal_no_unique', 'unique(personal_no)', 'Can not be duplicate value for Personal Card No!'),
         ('card_no_unique', 'unique(card_no)', 'Can not be duplicate value for Personal Card Code!')
         ]
+        # fullname 
+
+    # all feature in one field
+    @api.depends('feature_list')
+    def _feature(self):
+        for record in self:
+            new_feature_list=[emp.name for emp in record.feature_list]
+            # string = ' '.join([str(item) for item in new_feature_list])
+            string = ' , '.join(new_feature_list)
+            record.human_feature = string
+
+    # fullname 
+    @api.depends('first_name','last_name')
+    def _fullname(self):
+        for record in self:
+            record.full_name = record.first_name + " " + record.last_name
+            
+    # birhdate in one field
+    @api.depends("birth_of_date")
+    def _calculate_age(self):
+        today = date.today()
+        for record in self:
+            age = today.year - record.birth_of_date.year - ((today.month, today.day) <(record.birth_of_date.month, record.birth_of_date.day))
+            record.age = age
+            print("persons age: ",record.age)
 
     # validate personal no
-    @api.onchange('personal_no')
+    @api.constrains('personal_no')
     def validate_personal_no(self):
         for record in self:
             if record.personal_no != False:
@@ -41,7 +70,7 @@ class Employee(models.Model):
                     raise ValidationError('Personal number must be 11 digit! ')
 
      # validate birth of date
-    @api.onchange('birth_of_date')
+    @api.constrains('birth_of_date')
     def validate_birth_of_date(self):
         today = date.today()
         for record in self:
@@ -52,7 +81,7 @@ class Employee(models.Model):
                     raise ValidationError("Imposible value !!! You are always alive ?")
     
     # validate exspiry date 
-    @api.onchange('date_of_expiry','birth_of_date','date_of_issue')
+    @api.constrains('date_of_expiry','birth_of_date','date_of_issue')
     def validate_date_of_expiry(self):
         today = date.today()
         for record in self:
@@ -76,7 +105,7 @@ class Employee(models.Model):
                         raise ValidationError('This Card ID is expired your or entered data is incorrectly ')
    
     # validate card code
-    @api.onchange('card_no')
+    @api.constrains('card_no')
     def validate_card_no(self):
         for record in self:
             if record.card_no != False:
@@ -87,7 +116,7 @@ class Employee(models.Model):
                     raise ValidationError('Personal Card No must be 9 characters! ')
             return None
 
-    @api.onchange('date_of_issue','birth_of_date')
+    @api.constrains('date_of_issue','birth_of_date')
     def validate_date_of_issue(self):
         today = date.today()
         for record in self:
@@ -109,12 +138,19 @@ class Department(models.Model):
     _name = "company.department"
     _description ="Company departments"
     
-    name = fields.Char(string="Department name",required=True)
+    name = fields.Char(string='Department name',required=True)
     description = fields.Text(string="Description",required=True)
     employee_id = fields.One2many('company.employee', 'department_id', string='Employee')
+    count_employee = fields.Integer(string='Employee', compute='_count_employee',store=True)
 
     _sql_constraints = [
         ('name_unique', 'unique(name)', 'Can not be duplicate value for Department name!')]
+
+    @api.depends("employee_id")
+    def _count_employee(self):
+        for record in self:
+            record.count_employee = len(record.employee_id)
+            print("this is total emoloyee: ",record.count_employee)
 
 class Feature(models.Model):
     _name = "company.feature"
@@ -122,6 +158,6 @@ class Feature(models.Model):
 
     name = fields.Char(string="Human Feature",required=True)
     description = fields.Text(string="Description",required=True)
-
+    
     _sql_constraints = [
         ('name_unique', 'unique(name)', 'Can not be duplicate value for Feature name!')]

@@ -25,7 +25,8 @@
                 </kanban>
             </field>
         </record>
-<!-- start feature kanban view-->
+<!-- end feature kanban view-->
+
 
 <!-- start feature list view -->
     <record id="feature_list_view" model="ir.ui.view">
@@ -65,7 +66,7 @@
         <field name="name">Feature</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">company.feature</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,pivot,tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your feature !
@@ -99,7 +100,6 @@
             </field>
         </record>
 <!-- start department kanban view-->
-
         <record id="department_form_view" model="ir.ui.view">
             <field name="name">company.list.view</field>
             <field name="model">company.department</field>
@@ -116,12 +116,40 @@
             </form>
             </field>
         </record>
+        <!-- end department kanban view -->
+        <!--start pivot department -->
+
+        <record id="company_department_pivot" model="ir.ui.view">
+            <field name="name">company.department.pivot</field>
+            <field name="model">company.department</field>
+            <field name="arch" type="xml">
+                <pivot string="Department">
+                    <field name="name" type="row"/>
+                    <field name="count_employee"  type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- end pivot department -->
+        <!-- start department grap -->
+        <record id="company_department_graph" model="ir.ui.view">
+            <field name="name">company.department.graph</field>
+            <field name="model">company.department</field>
+            <field name="arch" type="xml">
+                <graph string="Department Graph">
+                    <field name="name"/>
+                    <field name="count_employee" type="measure" />
+                </graph>
+            </field>
+        </record>
+        <!-- end department grap -->
+
         <!-- action of department menu -->
         <record id="action_department" model="ir.actions.act_window">
             <field name="name">Departments</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">company.department</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,tree,pivot,graph,form</field>
             <field name="help" type="html">
             <p class = "o_view_nocontent_smiling_face">
             Create your department !
@@ -194,15 +222,17 @@
                                 <!-- <img t-att-src="kanban_image('employee.profile', 'image_128', record.id.value)" width="54px" height="54px" alt="profile image"/> -->
                             </t>
                             <t t-else = "">
-                                <img class="o_kanban_image" alt="avatar" t-att-src='_s+"/base/static/img/avatar.png"' />
+                                <img class="o_kanban_image emp_img" alt="avatar" t-att-src='_s+"/base/static/img/avatar.png"' />
                             </t>
                             <div class="oe_kanban_details">
-                                <strong class="o_kanban_record_title"><field name="first_name"/> </strong>  
+                                <strong class="o_kanban_record_title title"><field name="full_name"/> </strong>  
                             <div class="o_kanban_tags_section " />
                                 <ul>
-                                <li class = "title_colors"> ID:<field name="id"/> </li>
+                                <li class = "title_colors age"> AGE:<field name="id"/> years old </li>
                                 <li class = "title_colors" > PERSONAL NO:<field name="personal_no"/> </li>
                                 <li class = "title_colors"> VALID :<field name="date_of_issue"/> TO <field name="date_of_expiry"/> </li>
+                                <li class = "title_colors age"> Feature:<field name="human_feature"/>  </li>
+                                
                                 </ul> 
                             </div>
                        </div>
@@ -219,38 +249,73 @@
       <field name="arch" type="xml">
         <tree editable="bottom">
           <field name="first_name"/>
-              <field name="last_name" />
-              <field name="cit" />
-              <field name="gender" />
-              <field name="personal_no" />
-              <field name="birth_of_date" />
-              <field name="date_of_expiry" />
-                <field name="date_of_issue" />
-               <field name="card_no" />
-              <field name="signature" widget="image" class="oe_avatar " />
-              <field name="place_of_birth" />
-              <field name="issuing_autority" />
-              <field name="profile" widget="image" class="oe_avatar "  />
-              <field name="department_id" />
-              <field name="feature_list" widget="many2many_tags" />
+            <field name="last_name" />
+            <field name="cit" />
+            <field name="gender" />
+            <field name="personal_no" />
+            <field name="birth_of_date" />
+            <field name="date_of_expiry" />
+            <field name="date_of_issue" />
+            <field name="card_no" />
+            <field name="signature"  widget="image" class="oe_avatar " />
+            <field name="place_of_birth" />
+            <field name="issuing_autority" />
+            <field name="profile" widget="image" class="oe_avatar "  />
+            <field name="department_id" />
+            <field name="feature_list" widget="many2many_tags" />
         </tree>
       </field>
     </record>
 <!-- end employee list -->
 
+    <!--start search employee -->
+    <record id="employee_search" model="ir.ui.view">
+        <field name="name">company.employee.search</field>
+        <field name="model">company.employee</field>
+        <field name="arch" type="xml">
+            <search string="Employee">
+                <field name="personal_no" />
+                <field name="cit" />
+                <field name="first_name"/>
+                <field name="last_name" />
+                <separator/>
+                <filter name="gender" string="Male" domain="[('gender', '=', 'M')]" />
+                <filter name="gender" string="Female" domain="[('gender', '=', 'F')]" />
+                <group expand="0" string="Group By">
+                    <filter string="Department" name="department_id" domain="" context="{'group_by':'department_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <!-- end search employee -->
+
         <record id="action_emploee" model="ir.actions.act_window">
             <field name="name">Employee</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">company.employee</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,tree,pivot,form</field>
             <field name="help" type="html">
             <p class = "o_view_nocontent_smiling_face">
-            Create your department !
+            Create your employee !
             </p>
             </field>
         </record>
 
-    <!-- end employee -->
+    <!-- end employee search-->
+
+<!--start pivot department -->
+        <record id="company_department_pivot" model="ir.ui.view">
+            <field name="name">company.employee.pivot</field>
+            <field name="model">company.employee</field>
+            <field name="arch" type="xml">
+                <pivot string="Department">
+                    <field name="gender" type="row"/>
+                    <field name="department_id" type="row"/>
+                </pivot>
+            </field>
+        </record>
+
+<!-- end pivot department -->
 
 
         <menuitem id = "company_root_menu" name = "company"  />

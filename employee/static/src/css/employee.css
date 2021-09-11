@@ -6,3 +6,13 @@
   font-size: 30px;
 }
 
+.title{
+  font-weight:600;
+  float:right;
+}
+.age{
+  margin-top:22px;
+}
+.emp_img{
+  width:90px;
+}

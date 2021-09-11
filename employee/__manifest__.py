@@ -9,6 +9,7 @@
         'security/ir.model.access.csv',
         'views/view.xml',
         'views/template.xml',
+        'views/company_employee_analyse.xml',
     ],
     'installable': True,
     'application': True,

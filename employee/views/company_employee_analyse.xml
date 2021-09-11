@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- <record model="ir.actions.act_window" id="action_company_emplyee_employeeanalysis">
+        <field name="name">Companye employee analysis</field>
+        <field name="res_model">company.employee.employeeanalysis</field>
+        <field name="view_mode">pivot</field>
+    </record> -->
+
+
+
+      <record id="action_company_emplyee_employeeanalysis" model="ir.actions.act_window">
+            <field name="name">Companye employee analysis</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">company.employee.employeeanalysis</field>
+            <field name="view_mode">pivot,graph</field>
+            <field name="help" type="html">
+            <p class = "o_view_nocontent_smiling_face">
+            Create your employee !
+            </p>
+            </field>
+        </record>
+
+<!-- start analyse graph  -->
+        <record id="company_department_graph" model="ir.ui.view">
+            <field name="name">company.employee.employeeanalysis.graph</field>
+            <field name="model">company.employee.employeeanalysis</field>
+            <field name="arch" type="xml">
+                <graph string="Department Graph">
+                    <field name="emp_feature"/>
+                    <field name="total_feature" type="measure" />
+                </graph>
+            </field>
+        </record>
+
+        <!-- <record id="company_department_graph" model="ir.ui.view">
+            <field name="name">company.employee.employeeanalysis.graph</field>
+            <field name="model">company.employee.employeeanalysis</field>
+            <field name="arch" type="xml">
+                <graph string="Department Graph">
+                    <field name="gender"/>
+                    <field name="total_gender" type="measure" />
+                </graph>
+            </field>
+        </record> -->
+
+
+
+
+
+<!-- end analyse graph  -->
+
+
+
+
+<!-- start analise pivot employee -->
+    <record id="company_employee_analyse_pivot_view" model="ir.ui.view">
+         <field name="name">company.employee.employeeanalysis.pivot</field>
+         <field name="model">company.employee.employeeanalysis</field>
+         <field name="arch" type="xml">
+             <pivot string="Analysis" disable_linking="True">
+                 <field name="gender" type="row"/>
+                 <field name="emp_feature" type="row"/>
+                 <!-- <field name="employee_feature" type="col"/> -->
+                 <field name="total_feature" type="measure"/>
+                 <!-- <field name="total_gender" type="measure"/> -->
+             </pivot>
+         </field>
+    </record>
+<!-- end analise pivot employee -->
+
+    <menuitem id="company_employee_employeeanalysis"
+            name="Company Employee Analyse"
+            sequence="4"
+            action="action_company_emplyee_employeeanalysis"
+            parent="company_root_menu"/>
+
+</odoo>
