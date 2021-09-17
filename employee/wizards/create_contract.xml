@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="create_contract_form" model="ir.ui.view">
+        <field name="name">create.contract.wizard</field>
+        <field name="model">create.contract</field>
+        <field name="arch" type="xml">
+            <form string="create contract">
+                <group >
+                <field name="employee_id" />   
+                <field name="code"/>  
+                <field name="start_date"/>
+                <field name="end_date"/>               
+                </group>
+                <footer>
+                    <button name="create_contract" string="Create" type="object" class="btn-primary" />
+                    <button special="cancel" string="Cancelar" class="oe_link btn-primary" default_focus="1"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+ 
+        <record id="create_contract_wizard" model="ir.actions.act_window">
+            <field name="name">Create contract</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">create.contract</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="create_contract_form"/>
+            <field name="target">new</field>
+        </record>
+
+</odoo>
+
+

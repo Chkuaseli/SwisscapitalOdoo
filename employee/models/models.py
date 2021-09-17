@@ -2,6 +2,8 @@ from odoo import fields,models,api
 from odoo.exceptions import ValidationError
 from datetime import date,datetime,timedelta
 from odoo.http import request
+from odoo import tools
+
 
 class Employee(models.Model):
     _name = "company.employee"
@@ -26,13 +28,16 @@ class Employee(models.Model):
     department_id = fields.Many2one('company.department', string="Department", required=True)
     feature_list = fields.Many2many("company.feature", 'employee_fetaure_rel', 'employee_id', 'feture_id', string = "Human Features",required=True)
     human_feature = fields.Char(string="Feature",compute = "_feature",store = True)
-
+    contract_id = fields.Many2one('company.contract', string="contract")
     # unique data "personal_no","card_no"
     _sql_constraints = [
         ('personal_no_unique', 'unique(personal_no)', 'Can not be duplicate value for Personal Card No!'),
         ('card_no_unique', 'unique(card_no)', 'Can not be duplicate value for Personal Card Code!')
         ]
-        # fullname 
+
+    # def __repr__(self):
+    #     for record in self:
+    #         return f'Name {record.first_name} Last Name: {record.last_name} PN: {record.personal_no} Card NO: {record.card_no}'
 
     # all feature in one field
     @api.depends('feature_list')
@@ -48,8 +53,8 @@ class Employee(models.Model):
     def _fullname(self):
         for record in self:
             record.full_name = record.first_name + " " + record.last_name
-            
-    # birhdate in one field
+
+    # age in one field
     @api.depends("birth_of_date")
     def _calculate_age(self):
         today = date.today()
@@ -161,3 +166,44 @@ class Feature(models.Model):
     
     _sql_constraints = [
         ('name_unique', 'unique(name)', 'Can not be duplicate value for Feature name!')]
+
+class Contract(models.Model):
+    _name = "company.contract"
+    _description ="Company Employee's contract" 
+    # employee_id = fields.One2many('company.employee', 'contract_id', string='Employee')
+    employee_id = fields.Integer(string="Employee ID")
+    code = fields.Char(string="contract code",required=True)
+    start_date = fields.Date(string="Start date",required=True)
+    end_date = fields.Date(string="End date",required=True)
+
+
+
+ 
+class Employeelist(models.Model):
+    _name = "company.employee.employeelist"
+    _auto = False
+    first_name = fields.Char(string="First Name")
+    last_name =  fields.Char(string="Last Name")
+    gender =  fields.Char(string="Gender")
+    personal_no =  fields.Char(string="Personal NO")
+    department_name = fields.Char(string="Department Name")
+    employee_feature = fields.Char(string = "Employee Feature ")
+    code = fields.Char(string="Code")
+
+    def init(self):
+            tools.drop_view_if_exists(self.env.cr, 'company_employee_employeelist')
+            self.env.cr.execute("""
+                CREATE OR REPLACE VIEW company_employee_employeelist AS (
+                    SELECT
+                        row_number() OVER () AS id,
+                        ce.first_name as first_name,
+                        ce.last_name as last_name,
+                        ce.gender as gender,    
+                        ce.personal_no As personal_no, 
+                        cd.name as department_name,
+                        cc.code as code
+                        from company_employee ce 
+                        left join company_department cd on ce.department_id = cd.id 
+                        left join company_contract cc on cc.employee_id = ce.id
+                    )""")
+

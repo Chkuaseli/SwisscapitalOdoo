@@ -9,15 +9,7 @@ class Employeeanalysis(models.Model):
     emp_feature = fields.Char(string="human feature")
     total_feature = fields.Integer(string="total_feature")
     total_gender = fields.Integer(string="total_gender")
-    # cit = fields.Char(string="Cit")
     gender = fields.Selection([("M","Male"),("F","Female")],help="Gender")
-    # birth_of_date = fields.Date(string="Birth Date")
-    # date_of_expiry = fields.Date(string="Date Expiry")
-    # place_of_birth = fields.Char(string="Place of birth")
-    # date_of_issue = fields.Date(string="Date of Issue")
-    # issuing_autority = fields.Char(string="Issuing Autority")
-    # date_crated = fields.Date(string="Birth Created")
-    # department_id = fields.Many2one('company.department', string="Department", )
     feature_list = fields.Many2many("company.feature", 'employee_fetaure_rel', 'employee_id', 'feture_id', string = "Human")
 
     def init(self):

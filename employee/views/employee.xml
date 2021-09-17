@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="employee_page" name="Employee">
+        <t t-call="website.layout">
+            <div class = "container">
+                <table class = "table table-bordered">
+                    <thead>
+                        <tr>
+                            <td>
+                            Name
+                            </td>
+                            <td>
+                            Last Name
+                            </td>
+                            <td>
+                            Gender
+                            </td>
+                            <td>
+                            Personal NO
+                            </td>
+                            <td>
+                            CardNO
+                            </td>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach = "datas" t-as="data">
+                            <tr>
+                                <td>
+                                    <t t-esc = "data.first_name"/>
+                                </td>
+                                <td>
+                                    <t t-esc = "data.last_name"/>
+                                </td>
+                                <td>
+                                    <t t-esc = "data.gender"/>
+                                </td>
+                                <td>
+                                    <t t-esc = "data.personal_no"/>
+                                </td>
+                                <td>
+                                    <t t-esc = "data.card_no"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+</odoo>
+

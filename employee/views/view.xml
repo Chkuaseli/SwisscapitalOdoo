@@ -42,6 +42,9 @@
             </field>
         </record>
 <!-- start feature list view-->
+
+
+
 <!-- start feature form -->
         <record id="feature_form_view" model="ir.ui.view">
         <field name="name">company.feature.form</field>
@@ -166,9 +169,14 @@
       <field name="model">company.employee</field>
       <field name="arch" type="xml">
         <form id = "employee">
+        <header>
+      
+        </header>
         <sheet>
           <group>
             <group>
+            
+              <button name="%(create_contract_wizard)d" type="action" string="Create contract" class="oe_highlight" />
               <field name="first_name"/>
               <field name="last_name" />
               <field name="cit" />
@@ -244,7 +252,7 @@
 <!-- end employee kanban view -->
 <!-- start employee list view -->
     <record id="employee_list_view" model="ir.ui.view">
-      <field name="name">company.list.view</field>
+      <field name="name">company.employee.tree</field>
       <field name="model">company.employee</field>
       <field name="arch" type="xml">
         <tree editable="bottom">
@@ -268,7 +276,7 @@
     </record>
 <!-- end employee list -->
 
-    <!--start search employee -->
+    <!--start search employee and filter -->
     <record id="employee_search" model="ir.ui.view">
         <field name="name">company.employee.search</field>
         <field name="model">company.employee</field>
@@ -287,7 +295,7 @@
             </search>
         </field>
     </record>
-    <!-- end search employee -->
+    <!-- end search employee and filter -->
 
         <record id="action_emploee" model="ir.actions.act_window">
             <field name="name">Employee</field>
