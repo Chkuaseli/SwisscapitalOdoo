@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_employee_view">
+    <header>
+    <button name="preview_invoice"  string="Preview" />
+    </header>
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="doc">
+            <t t-call="web.external_layout">
+                    <div class = "page">
+                        <h2 style="text-align:center;font-weight:bold;font-color:green;">Employee Card Information </h2>
+                            <p style="text-align:center;padding-top:10px;">
+                            <img t-if ="doc.profile"
+                            t-att-src="'data:image/png;base64,%s' % to_text(doc.profile)" height= "160" border="1" width="130"/>
+                            <img t-else ="doc.profile"
+                            t-att-src="'/web/static/src/img/placeholder.png'" height= "140" border="1" width="120"/>
+                            </p>
+                            <table class = "table table-bordered">
+                               <tr>
+                                <th>Name</th>
+                                <td><span t-field="doc.first_name"/></td>
+                                </tr>
+                                <tr>
+                                <th>Last Name</th>
+                                <td><span t-field="doc.last_name"/></td>
+                                </tr>
+                                <tr>
+                                <th>Age</th>
+                                <td><span t-field="doc.age"/></td>
+                                </tr>
+                                <tr>
+                                <th>Cit</th>
+                                <td><span t-field="doc.cit"/></td>
+                                </tr>
+                                <tr>
+                                <th>Gender</th>
+                                <td><span t-field="doc.gender"/></td>
+                                </tr>
+                                <tr>
+                                <th>Personal No</th>
+                                <td><span t-field="doc.personal_no"/></td>
+                                </tr>
+                                <tr>
+                                <th>Birth Date</th>
+                                <td><span t-field="doc.birth_of_date"/></td>
+                                </tr>
+                                <tr>
+                                <th>Date expiry</th>
+                                <td><span t-field="doc.date_of_expiry"/></td>
+                                </tr>
+                                <tr>
+                                <th>Place Of Birth</th>
+                                <td><span t-field="doc.place_of_birth"/></td>
+                                </tr>
+                                <tr>
+                                <th>Card No</th>
+                                <td><span t-field="doc.card_no"/></td>
+                                </tr>
+                                <tr>
+                                <th>Date Of Issue</th>
+                                <td><span t-field="doc.date_of_issue"/></td>
+                                </tr>
+                                <tr>
+                                <th>Issuing Autority</th>
+                                <td><span t-field="doc.issuing_autority"/></td>
+                                </tr>
+                                <tr>
+                                <th style="font-weight:bold;">Department</th>
+                                <td><span t-field="doc.department_id"/></td>
+                                </tr>
+                                <tr>
+                                <th>Human Feature</th>
+                                <td><span t-field="doc.human_feature"/></td>
+                                </tr>
+                                <tr>
+                                <th>Contract Code</th>
+                                <td><span t-field="doc.contract_code"/></td>
+                                </tr>
+                            </table>
+                            <p style="font-wight:bold;"> Signature: 
+                            <img t-if ="doc.signature"
+                            t-att-src="'data:image/png;base64,%s' % to_text(doc.signature)" height= "160" border="1" width="130"/>
+                            </p>
+                    </div>
+            </t>
+        </t> 
+    </t>
+</template>
+</odoo>

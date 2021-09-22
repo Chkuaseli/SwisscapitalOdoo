@@ -12,7 +12,7 @@ class Employee(models.Model):
     first_name = fields.Char(string="Name",required=True)
     last_name = fields.Char(string="Last Name",required=True)
     full_name = fields.Char(string="Full Name",compute='_fullname')
-    age = fields.Integer(string="age",compute="_calculate_age")
+    age = fields.Integer(string="age",compute="_calculate_age",store=True)
     cit = fields.Char(string="Cit",required=True)
     gender = fields.Selection([("M","Male"),("F","Female")],help="Gender",required=True)
     personal_no = fields.Char(string="Personal No",required=True) # აქ integer არ გამოვიყენე რადგან მის რეინჯში არ ეტეოდა და bigint უნდა გამომეყენებინა რომლისთვისაც ახალი პაკეტი უნდა ჩამომეწერა ამიტომ თავი შევიკავე და ვალიდაციებში გამოვიყვან
@@ -29,6 +29,7 @@ class Employee(models.Model):
     feature_list = fields.Many2many("company.feature", 'employee_fetaure_rel', 'employee_id', 'feture_id', string = "Human Features",required=True)
     human_feature = fields.Char(string="Feature",compute = "_feature",store = True)
     contract_id = fields.Many2one('company.contract', string="contract")
+    contract_code = fields.Char(string="Contract code",compute="_code")
     # unique data "personal_no","card_no"
     _sql_constraints = [
         ('personal_no_unique', 'unique(personal_no)', 'Can not be duplicate value for Personal Card No!'),
@@ -38,6 +39,13 @@ class Employee(models.Model):
     # def __repr__(self):
     #     for record in self:
     #         return f'Name {record.first_name} Last Name: {record.last_name} PN: {record.personal_no} Card NO: {record.card_no}'
+    @api.depends('contract_id')
+    def _code(self):
+        for record in self:
+            record.contract_code = record.contract_id.code
+
+    def get_employee_report(self):
+        return self.env.ref('employee.report_employee_cards') .report_action(self)
 
     # all feature in one field
     @api.depends('feature_list')
@@ -170,25 +178,24 @@ class Feature(models.Model):
 class Contract(models.Model):
     _name = "company.contract"
     _description ="Company Employee's contract" 
-    # employee_id = fields.One2many('company.employee', 'contract_id', string='Employee')
-    employee_id = fields.Integer(string="Employee ID")
+    employee_id = fields.One2many('company.employee', 'contract_id', string='Employee')
     code = fields.Char(string="contract code",required=True)
     start_date = fields.Date(string="Start date",required=True)
     end_date = fields.Date(string="End date",required=True)
 
 
-
- 
 class Employeelist(models.Model):
     _name = "company.employee.employeelist"
     _auto = False
     first_name = fields.Char(string="First Name")
     last_name =  fields.Char(string="Last Name")
     gender =  fields.Char(string="Gender")
+    age =  fields.Integer(string="age")
     personal_no =  fields.Char(string="Personal NO")
     department_name = fields.Char(string="Department Name")
-    employee_feature = fields.Char(string = "Employee Feature ")
+    human_feature = fields.Char(string = "Human Feature")
     code = fields.Char(string="Code")
+    card_no = fields.Char(string="Code")
 
     def init(self):
             tools.drop_view_if_exists(self.env.cr, 'company_employee_employeelist')
@@ -198,12 +205,15 @@ class Employeelist(models.Model):
                         row_number() OVER () AS id,
                         ce.first_name as first_name,
                         ce.last_name as last_name,
-                        ce.gender as gender,    
-                        ce.personal_no As personal_no, 
+                        ce.gender as gender,
+                        ce.age as age,   
+                        ce.personal_no As personal_no,
+                        ce.card_no as card_no,
                         cd.name as department_name,
+                        ce.human_feature as human_feature,
                         cc.code as code
                         from company_employee ce 
                         left join company_department cd on ce.department_id = cd.id 
-                        left join company_contract cc on cc.employee_id = ce.id
+                        left join company_contract cc on cc.id = ce.contract_id
                     )""")
 

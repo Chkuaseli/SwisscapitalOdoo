@@ -3,3 +3,4 @@ department,access.company.department,model_company_department,1,1,1
 feature,access.company.feature,model_company_feature,1,1,1
 employee,access.company.employee,model_company_employee,1,1,1
 employeeanalysis,access.company.employee.employeeanalysis,model_company_employee_employeeanalysis,1,1,1
+contract,access.company.contract,model_company_contract,1,1,1

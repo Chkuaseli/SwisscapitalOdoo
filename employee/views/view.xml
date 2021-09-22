@@ -170,13 +170,11 @@
       <field name="arch" type="xml">
         <form id = "employee">
         <header>
-      
+        <button name="get_employee_report"  string="Preview" type="object" class="oe_highlight" />
         </header>
         <sheet>
           <group>
             <group>
-            
-              <button name="%(create_contract_wizard)d" type="action" string="Create contract" class="oe_highlight" />
               <field name="first_name"/>
               <field name="last_name" />
               <field name="cit" />
@@ -192,6 +190,17 @@
               <field name="profile" widget="image" class="oe_avatar " />
               <field name="department_id" />
               <field name="feature_list" widget="many2many_tags" />
+              <field name="contract_id" attrs="{'invisible':[('department_id', '!=', False)]}" />
+              <field name="contract_code" attrs="{'invisible':[('contract_id', '=', False)]}" />
+            <!-- button wizard call create contract -->
+            <button name="%(create_contract_wizard)d" type="action" string="Create contract" class="oe_highlight" 
+            attrs="{'invisible': [('contract_id','!=',False)]}" />
+            <!-- button wizard call update contract -->
+            <button name="%(update_contract_wizard)d" type="action" string="Update contract" class="oe_highlight" 
+            attrs="{'invisible': [('contract_id','=',False)]}" />
+            <!-- button wizard call delete contract -->
+            <button name="%(delete_contract_wizard)d" type="action" string="Delete contract" class="oe_highlight" 
+            attrs="{'invisible': [('contract_id','=',False)]}" />
             </group>
           </group>
         </sheet>

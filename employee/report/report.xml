@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <report id='report_employee_cards' 
+    model='company.employee'
+    string='company employee'
+    report_type='qweb-pdf' 
+    name='employee.report_employee_view' 
+    file='employee.report_employee'/>
+</odoo>

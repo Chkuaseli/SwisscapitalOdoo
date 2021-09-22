@@ -13,7 +13,8 @@
         'views/company_employee_analyse.xml',
         'views/employee_list.xml',
         'views/employee.xml',
-       
+        'report/employee_card.xml',
+        'report/report.xml',
     ],
     'installable': True,
     'application': True,

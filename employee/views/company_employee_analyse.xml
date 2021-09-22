@@ -10,7 +10,7 @@
 
 
       <record id="action_company_emplyee_employeeanalysis" model="ir.actions.act_window">
-            <field name="name">Companye employee analysis</field>
+            <field name="name">Company employee analysis</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">company.employee.employeeanalysis</field>
             <field name="view_mode">pivot,graph</field>

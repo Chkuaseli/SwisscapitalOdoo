@@ -10,9 +10,12 @@
             <field name="first_name" />
             <field name="last_name" />
             <field name="gender" />
+            <field name="age" />
             <field name="personal_no" />
+            <field name="card_no" />
             <field name="department_name" />
             <field name="code" />
+            <field name="human_feature" />
         </tree>
       </field>
     </record>
