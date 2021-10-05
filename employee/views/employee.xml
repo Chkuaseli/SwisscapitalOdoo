@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="employee_page" name="Employee">
+    <template id="employees" name="Employee">
         <t t-call="website.layout">
             <div class = "container">
                 <table class = "table table-bordered">

@@ -14,7 +14,7 @@
             <field name="personal_no" />
             <field name="card_no" />
             <field name="department_name" />
-            <field name="code" />
+            <field name="contract" />
             <field name="human_feature" />
         </tree>
       </field>
@@ -26,13 +26,31 @@
     <field name="name">Employee</field>
     <field name="type">ir.actions.act_window</field>
     <field name="res_model">company.employee.employeelist</field>
-    <field name="view_mode">tree</field>
+    <field name="view_mode">tree,pivot</field>
     <field name="help" type="html">
     <p class = "o_view_nocontent_smiling_face">
     Create your employee !
     </p>
     </field>
 </record>
+
+<!--start pivot employeelist -->
+  <record id="company_employeelist_pivot" model="ir.ui.view">
+      <field name="name">company.employee.employeelist.pivot</field>
+      <field name="model">company.employee.employeelist</field>
+      <field name="arch" type="xml">
+          <pivot string="Employee">
+              <field name="gender" type="row"/>
+              <field name="department_name" type="row"/>
+          </pivot>
+      </field>
+  </record>
+
+<!-- end pivot employeelist -->
+
+
+
+
 <menuitem id = "emploeelist_sub_menu" name = "Employee List" parent = "company_root_menu" action ="action_emploeelist" sequence = "0" />
 </odoo>
 

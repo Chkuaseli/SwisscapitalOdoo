@@ -7,8 +7,8 @@
             <form string="create contract">
                 <group >
                 <field name="employee_id" invisible="1"/>   
-                <field name="code"/>  
                 <field name="start_date"/>
+                <field name="contracts_list" widget="many2many_tags" /> 
                 <field name="end_date"/>               
                 </group>
                 <footer>
@@ -37,8 +37,8 @@
             <form string="update contract">
                 <group >
                 <field name="employee_id" invisible="1" />   
-                <field name="code"/>  
-                <field name="start_date"/>
+                <field name="start_date"/> 
+                <field name="contracts_list" widget="many2many_tags"/> 
                 <field name="end_date"/>               
                 </group>
                 <footer>
@@ -85,31 +85,6 @@
         <field name="target">new</field>
     </record>
 
-<!-- delete contract  -->
-  <record id="delete_contract_form" model="ir.ui.view">
-        <field name="name">create.contract.wizard</field>
-        <field name="model">create.contract</field>
-        <field name="arch" type="xml">
-            <form string="delete contract">
-                <group >
-                <h2>You wont to delete contract?</h2>        
-                </group>
-                <footer>
-                    <button name="delete_contract" string="Delete" type="object" class="btn-primary" />
-                    <button special="cancel" string="Cancelar" class="oe_link btn-primary" default_focus="1"/>
-                </footer>
-            </form>
-        </field>
-    </record>
- 
-    <record id="delete_contract_wizard" model="ir.actions.act_window">
-        <field name="name">delete contract</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">create.contract</field>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="delete_contract_form"/>
-        <field name="target">new</field>
-    </record>
 </odoo>
 
 

@@ -4,9 +4,10 @@
     'version' : '1.0',
     'category': 'administration',
     'secuence': - 100,
-    'depends' : [],
+    'depends' : ['website'],
     'data': [
         'security/ir.model.access.csv',
+        'security/security.xml',
         'wizards/create_contract.xml',
         'views/view.xml',
         'views/template.xml',

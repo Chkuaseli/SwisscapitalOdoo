@@ -24,12 +24,13 @@ class Employee(models.Model):
     date_of_issue = fields.Date(string="Date of Issue",required=True)
     issuing_autority = fields.Char(string="Issuing Autority",required=True)
     profile=fields.Binary(string="Profile Image" ,max_width = 100,max_height = 100,help = "Profile image",required=True)
-    date_crated = fields.Date(string="Birth Created",required=True)
+    # date_crated = fields.Date(string="Birth Created",required=True)
     department_id = fields.Many2one('company.department', string="Department", required=True)
     feature_list = fields.Many2many("company.feature", 'employee_fetaure_rel', 'employee_id', 'feture_id', string = "Human Features",required=True)
     human_feature = fields.Char(string="Feature",compute = "_feature",store = True)
-    contract_id = fields.Many2one('company.contract', string="contract")
-    contract_code = fields.Char(string="Contract code",compute="_code")
+    contract_id = fields.Many2many("company.contract", 'employee_contract_rel', 'employee_id', 'contract_id', string = "Employees Contract",required=True)
+    # contract_id = fields.Many2one('company.contract', string="contract")
+    contract_code = fields.Char(string="Contract code",compute="_code",store=True)
     # unique data "personal_no","card_no"
     _sql_constraints = [
         ('personal_no_unique', 'unique(personal_no)', 'Can not be duplicate value for Personal Card No!'),
@@ -42,8 +43,14 @@ class Employee(models.Model):
     @api.depends('contract_id')
     def _code(self):
         for record in self:
-            record.contract_code = record.contract_id.code
-
+            print("odooooolist: ",record.contract_id)
+            new_contract = [rec.name for rec in record.contract_id.contracts_list]
+            print("new_contract",new_contract)
+            string = ' , '.join(new_contract)
+            print("new_contracte",string)
+            record.contract_code = string
+            
+    # button for preview report
     def get_employee_report(self):
         return self.env.ref('employee.report_employee_cards') .report_action(self)
 
@@ -178,11 +185,19 @@ class Feature(models.Model):
 class Contract(models.Model):
     _name = "company.contract"
     _description ="Company Employee's contract" 
+    
     employee_id = fields.One2many('company.employee', 'contract_id', string='Employee')
-    code = fields.Char(string="contract code",required=True)
-    start_date = fields.Date(string="Start date",required=True)
-    end_date = fields.Date(string="End date",required=True)
+    contracts_list = fields.Many2many("company.companycontracts", 'contract_companycontracts_rel', 'contract_id', 'companycontracts_id', string = "Company Contract")
+    start_date = fields.Date(string="Start date")
+    end_date = fields.Date(string="End date")
 
+class Companycontracts(models.Model):
+    _name = "company.companycontracts"
+    _description ="Company Exists Contracts"
+
+    name = fields.Char(string="Contract name",required=True)
+    code = fields.Char(string="contract code",required=True)
+    description = fields.Text(string="Description",required=True)
 
 class Employeelist(models.Model):
     _name = "company.employee.employeelist"
@@ -192,9 +207,9 @@ class Employeelist(models.Model):
     gender =  fields.Char(string="Gender")
     age =  fields.Integer(string="age")
     personal_no =  fields.Char(string="Personal NO")
-    department_name = fields.Char(string="Department Name")
+    department_name = fields.Char(string="Department")
     human_feature = fields.Char(string = "Human Feature")
-    code = fields.Char(string="Code")
+    contract = fields.Char(string="Code")
     card_no = fields.Char(string="Code")
 
     def init(self):
@@ -211,9 +226,9 @@ class Employeelist(models.Model):
                         ce.card_no as card_no,
                         cd.name as department_name,
                         ce.human_feature as human_feature,
-                        cc.code as code
+                        ce.contract_code as contract
                         from company_employee ce 
                         left join company_department cd on ce.department_id = cd.id 
-                        left join company_contract cc on cc.id = ce.contract_id
+                        
                     )""")
 
