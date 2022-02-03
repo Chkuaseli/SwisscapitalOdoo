@@ -74,7 +74,8 @@ class Employee(models.Model):
     def _calculate_age(self):
         today = date.today()
         for record in self:
-            age = today.year - record.birth_of_date.year - ((today.month, today.day) <(record.birth_of_date.month, record.birth_of_date.day))
+            comp_birth = datetime.strptime(record.birth_of_date,'%Y-%m-%d').date()
+            age = today.year - comp_birth.year - ((today.month, today.day) <(comp_birth.month, comp_birth.day))
             record.age = age
             print("persons age: ",record.age)
 
@@ -94,10 +95,11 @@ class Employee(models.Model):
     def validate_birth_of_date(self):
         today = date.today()
         for record in self:
+            comp_birth = datetime.strptime(record.birth_of_date,'%Y-%m-%d').date()
             if record.birth_of_date != False:
-                if record.birth_of_date > today:
+                if comp_birth > today:
                     raise ValidationError("Imposible value for birt of date!")
-                if record.birth_of_date < date(1900, 1, 1):
+                if comp_birth < date(1900, 1, 1):
                     raise ValidationError("Imposible value !!! You are always alive ?")
     
     # validate exspiry date 
@@ -106,12 +108,14 @@ class Employee(models.Model):
         today = date.today()
         for record in self:
             if record.birth_of_date != False and record.date_of_expiry != False and record.date_of_issue != False:
-                age = today.year - record.birth_of_date.year - ((today.month, today.day) <(record.birth_of_date.month, record.birth_of_date.day))
-                range_of_ex = record.date_of_expiry  - record.date_of_issue
+                age = today.year - datetime.strptime(record.birth_of_date,'%Y-%m-%d').date().year - ((today.month, today.day) <(datetime.strptime(record.birth_of_date,'%Y-%m-%d').date().month, datetime.strptime(record.birth_of_date,'%Y-%m-%d').date().day))
+                range_of_ex = datetime.strptime(record.date_of_expiry,'%Y-%m-%d').date()  - datetime.strptime(record.date_of_issue,'%Y-%m-%d').date()
+                expiry =datetime.strptime(record.date_of_expiry,'%Y-%m-%d').date() 
+                print(age)
                 max = date.today() + timedelta(10*365+2)
                 print("es aris vadaaa piradobis: ",range_of_ex)
                 #data must be range "curent data" and "curent data + 10 year"
-                if record.date_of_expiry < today or record.date_of_expiry > max:
+                if expiry < today or expiry > max:
                     raise ValidationError("This Expity date is up to data")
                 if age < 18 and range_of_ex != timedelta((4*365)+1):
                     raise ValidationError('This Card ID is expired your or entered data is incorrectly ')
@@ -141,16 +145,20 @@ class Employee(models.Model):
         today = date.today()
         for record in self:
             max = date.today() - timedelta(10*365+2)
-            if record.date_of_issue != False and record.birth_of_date != False:
-                age = today.year - record.birth_of_date.year - ((today.month, today.day) <(record.birth_of_date.month, record.birth_of_date.day))
-                issue = today - record.date_of_issue
-                if record.date_of_issue > today or record.date_of_issue < max:
+            birth =datetime.strptime(record.birth_of_date,'%Y-%m-%d').date() 
+            rec_iss =datetime.strptime(record.date_of_issue,'%Y-%m-%d').date() 
+            if rec_iss != False and birth != False:
+              
+                age = today.year - birth.year - ((today.month, today.day) <(birth.month, birth.day))
+                print(age)
+                issue = today - rec_iss
+                if rec_iss > today or rec_iss < max:
                     raise ValidationError('This ID Card is expired your card DATE OF DATE must be less then today')
                 if age < 18 and issue >= timedelta((4*365)+1):
-                    print("first record: ",record.date_of_issue)
+                    print("first record: ",rec_iss)
                     raise ValidationError('This ID Card is expired or your entered data is incorrectly ')
                 if age >= 18 and issue > timedelta(((10 * 365)+2)):
-                    print("second record",record.date_of_issue)
+                    print("second record",rec_iss)
                     raise ValidationError('This ID Card is expired or your entered data is incorrectly ')
 
 

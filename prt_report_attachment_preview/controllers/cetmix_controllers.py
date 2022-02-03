@@ -23,7 +23,8 @@ import werkzeug
 
 from odoo import http
 from odoo.http import request
-from odoo.tools.safe_eval import safe_eval, time
+from odoo.tools.safe_eval import safe_eval
+from datetime import time
 
 from odoo.addons.http_routing.models.ir_http import slugify
 from odoo.addons.web.controllers.main import ReportController

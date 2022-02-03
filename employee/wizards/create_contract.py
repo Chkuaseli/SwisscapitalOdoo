@@ -1,6 +1,6 @@
 from odoo import fields,models,api
 from odoo.exceptions import ValidationError
-from datetime import date
+from datetime import date,datetime
 
 class Contract(models.TransientModel):
     _name = "create.contract"
@@ -38,21 +38,23 @@ class Contract(models.TransientModel):
     def validate_start_date(self):
         today = date.today()
         for record in self:
-            if record.start_date != today:
+            comp_birth = datetime.strptime(record.start_date,'%Y-%m-%d').date()
+            if comp_birth != today:
                 raise ValidationError("Contract must be start from %s!" % today)
-            if record.end_date != False:
-                if record.start_date > record.end_date:
+            if comp_birth != False:
+                if comp_birth > datetime.strptime(record.end_date,'%Y-%m-%d').date():
                     raise ValidationError("Contract start date must be greather then contract end date! ")
     
     @api.constrains('end_date')
     def validate_end_date(self):
         today = date.today()
         for record in self:
-            if record.end_date != False:
-                if record.end_date <= today:
+            comp_birth = datetime.strptime(record.end_date,'%Y-%m-%d').date()
+            if comp_birth != False:
+                if comp_birth <= today:
                     raise ValidationError("Not valid date end date must be greather %s! " %today)
-                if record.end_date <= self.start_date:
-                    raise ValidationError("Not valid contact end date check %s!" %record.end_date)
+                if comp_birth <= datetime.strptime(self.start_date,'%Y-%m-%d').date():
+                    raise ValidationError("Not valid contact end date check %s!" %comp_birth)
 
     
     
